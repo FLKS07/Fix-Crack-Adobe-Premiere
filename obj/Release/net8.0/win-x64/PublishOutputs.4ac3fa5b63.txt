@@ -1,0 +1,8 @@
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\firewall_rules_crack_adobe_premiere.exe
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\firewall_rules_crack_adobe_premiere.dll
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\firewall_rules_crack_adobe_premiere.deps.json
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\firewall_rules_crack_adobe_premiere.runtimeconfig.json
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\firewall_rules_crack_adobe_premiere.pdb
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\System.Diagnostics.EventLog.dll
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\System.ServiceProcess.ServiceController.dll
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\bin\Release\net8.0\win-x64\publish\WindowsFirewallHelper.dll
