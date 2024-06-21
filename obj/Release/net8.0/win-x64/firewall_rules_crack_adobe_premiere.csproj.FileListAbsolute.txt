@@ -17,3 +17,4 @@ C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\obj\Releas
 C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\obj\Release\net8.0\win-x64\firewall_rules_crack_adobe_premiere.pdb
 C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\obj\Release\net8.0\win-x64\firewall_rules_crack_adobe_premiere.genruntimeconfig.cache
 C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\obj\Release\net8.0\win-x64\ref\firewall_rules_crack_adobe_premiere.dll
+C:\Users\Flavio\Documents\Scripts\firewall_rules_crack_adobe_premiere\obj\Release\net8.0\win-x64\firewall_rules_crack_adobe_premiere.sourcelink.json

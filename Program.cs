@@ -6,13 +6,15 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.IO.Enumeration;
 
 
 
 
 class Program
 {
-
+    public static bool fix = false;
 
     static void Main()
     {
@@ -27,7 +29,7 @@ class Program
         foreach (var dir in dir_)
         {
             Console.WriteLine($"\n Is this the correct folder?: \n {dir}");
-            Console.Write("\n [y/n]");
+            Console.Write("[y/n]");
             string folder_input = Console.ReadLine();
             folder_input.Trim().ToLower();
             if (folder_input == "y")
@@ -44,13 +46,16 @@ class Program
             path_to_use = Console.ReadLine().Trim();
         }
 
+        bool found_file = false;
         try
         {
             string[] files = Directory.GetFiles(path_to_use);
             foreach (string file in files)
             {
+                string file_name = Path.GetFileName(file);
+                file_name = file_name.Trim().ToLower();
 
-                if (file.Substring(file.LastIndexOf("\\")).Contains("Adobe") || file.Substring(file.LastIndexOf("\\")).Contains("Premiere") || file.Substring(file.LastIndexOf("\\")).Contains("Photshop") || file.Substring(file.LastIndexOf("\\")).Contains("Illustrator"))
+                if (file_name.Contains("photoshop") || file_name.Contains("premiere") || file_name.Contains("illustrator"))
                 {
                     Console.WriteLine($"Is this the right program? \n {path_to_use}\\{file.Trim()}");
                     Console.Write("[y/n]");
@@ -59,34 +64,9 @@ class Program
                     if (_input == "y")
                     {
                         path_to_use_file = Path.Combine(path_to_use, file);
+                        add_new_rule(path_to_use_file);
+                        found_file = true;
 
-                        Console.WriteLine(path_to_use_file);
-
-
-                        try
-                        {
-                            var rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
-                                "Block Adobe Premiere",
-                                FirewallAction.Block, path_to_use_file,
-                                FirewallProtocol.Any);
-                            rule.Direction = FirewallDirection.Outbound; //Outbound
-                            FirewallManager.Instance.Rules.Add(rule);
-
-
-                            var _rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
-                                "Block Adobe Premiere",
-                                FirewallAction.Block, path_to_use_file,
-                                FirewallProtocol.Any);
-
-                            _rule.Direction = FirewallDirection.Inbound; //Inbound
-                            FirewallManager.Instance.Rules.Add(_rule);
-
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to create the rule: {ex.Message}");
-                            // You might want to handle specific rule creation errors here
-                        }
                         break;
                     }
                     else
@@ -95,8 +75,13 @@ class Program
                     }
                 }
             }
+            if (!found_file)
+            {
 
-            //Console.WriteLine("\n Program not found, are you sure you put the Right PATH?");
+                Console.WriteLine("\n Program nout found, please put the Full path of the aplicaiton here:");
+                path_to_use_file = Console.ReadLine().Trim();
+                add_new_rule(path_to_use_file);
+            }
 
         }
         catch (UnauthorizedAccessException)
@@ -108,7 +93,45 @@ class Program
             Console.WriteLine("\n Path is not found, are you sure it's the right one?");
         }
 
+        if (fix == true)
+        {
+            Console.WriteLine("Fixed :) ! Adobe mad :(");
+        }
+        else
+        {
+            Console.WriteLine("Not fixed");
+        }
+
+    }
+
+    public static void add_new_rule(string path_to_use_file)
+    {
+        string filename = Path.GetFileName(path_to_use_file);
+        try
+        {
+            var rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
+                                    $"Block Adobe {filename}",
+                                    FirewallAction.Block, path_to_use_file,
+                                    FirewallProtocol.Any);
+            rule.Direction = FirewallDirection.Outbound; //Outbound
+            FirewallManager.Instance.Rules.Add(rule);
 
 
+            var _rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
+                $"Block Adobe {filename}",
+                FirewallAction.Block, path_to_use_file,
+                FirewallProtocol.Any);
+
+            _rule.Direction = FirewallDirection.Inbound; //Inbound
+            FirewallManager.Instance.Rules.Add(_rule);
+
+            fix = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to create the rule: {ex.Message}");
+            fix = false;
+            return;
+        }
     }
 }

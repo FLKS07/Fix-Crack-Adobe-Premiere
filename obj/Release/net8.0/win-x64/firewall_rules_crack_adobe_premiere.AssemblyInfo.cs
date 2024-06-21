@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("firewall_rules_crack_adobe_premiere")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f88cf614681c697e23c20c69c97f7dbfb54b1e0")]
 [assembly: System.Reflection.AssemblyProductAttribute("firewall_rules_crack_adobe_premiere")]
 [assembly: System.Reflection.AssemblyTitleAttribute("firewall_rules_crack_adobe_premiere")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
