@@ -1,116 +1,42 @@
-﻿using System.Security.AccessControl;
-using WindowsFirewallHelper;
-using WindowsFirewallHelper.FirewallRules;
-using WindowsFirewallHelper.Exceptions;
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.IO.Enumeration;
-
-
+﻿using WindowsFirewallHelper;
 
 
 class Program
 {
-    public static bool fix = false;
 
-    static void Main()
+    static void Main(string[] arg)
     {
-        string default_folder_location = @"C:\Program Files\Adobe";
-        string path_to_use = "";
-        string path_to_use_file;
-        Console.WriteLine("Adobe INSTALATION Folder DEFAULT Location: \n" + default_folder_location);
-        var dir_ = Directory.GetDirectories(default_folder_location);
-
-
-        bool found_folder = false;
-        foreach (var dir in dir_)
+        if (arg.Length == 0)
         {
-            Console.WriteLine($"\n Is this the correct folder?: \n {dir}");
-            Console.Write("[y/n]");
-            string folder_input = Console.ReadLine();
-            folder_input.Trim().ToLower();
-            if (folder_input == "y")
+            string? adobe_folder = Get_folders.Get_adobe_root_folder();
+            string? app_folder = Get_folders.get_app_folder(adobe_folder);
+            if (app_folder != null)
             {
-                path_to_use = dir;
-                Console.WriteLine(path_to_use);
-                found_folder = true;
-                break;
-            }
-        }
-        if (!found_folder)
-        {
-            Console.WriteLine("\n Press ENTER to use DEFAULT or put the path of aplication bellow:");
-            path_to_use = Console.ReadLine().Trim();
-        }
-
-        bool found_file = false;
-        try
-        {
-            string[] files = Directory.GetFiles(path_to_use);
-            foreach (string file in files)
-            {
-                string file_name = Path.GetFileName(file);
-                file_name = file_name.Trim().ToLower();
-
-                if (file_name.Contains("photoshop") || file_name.Contains("premiere") || file_name.Contains("illustrator"))
+                string? app_file_path = Get_folders.get_app(app_folder);
+                if (add_new_rule(app_file_path))
                 {
-                    Console.WriteLine($"Is this the right program? \n {path_to_use}\\{file.Trim()}");
-                    Console.Write("[y/n]");
-                    string _input = Console.ReadLine().ToLower();
-
-                    if (_input == "y")
-                    {
-                        path_to_use_file = Path.Combine(path_to_use, file);
-                        add_new_rule(path_to_use_file);
-                        found_file = true;
-
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
+                    Console.WriteLine("Sucessful");
                 }
             }
-            if (!found_file)
+            else
             {
-
-                Console.WriteLine("\n Program nout found, please put the Full path of the aplicaiton here:");
-                path_to_use_file = Console.ReadLine().Trim();
-                add_new_rule(path_to_use_file);
+                Console.WriteLine("Not found the aplication :(");
+                return;
             }
-
-        }
-        catch (UnauthorizedAccessException)
-        {
-            Console.WriteLine("\n The aplication is not openned with adminstrator permissions. \n This is needed to acess program folders");
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Console.WriteLine("\n Path is not found, are you sure it's the right one?");
         }
 
-        if (fix == true)
-        {
-            Console.WriteLine("Fixed :) ! Adobe mad :(");
-        }
-        else
-        {
-            Console.WriteLine("Not fixed");
-        }
+
+
 
     }
 
-    public static void add_new_rule(string path_to_use_file)
+    public static bool add_new_rule(string path_to_use_file)
     {
         string filename = Path.GetFileName(path_to_use_file);
         try
         {
             var rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
-                                    $"Block Adobe {filename}",
+                                    $"Automatic Block Adobe {filename}",
                                     FirewallAction.Block, path_to_use_file,
                                     FirewallProtocol.Any);
             rule.Direction = FirewallDirection.Outbound; //Outbound
@@ -118,20 +44,19 @@ class Program
 
 
             var _rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
-                $"Block Adobe {filename}",
+                $"Automatic: Block Adobe {filename}",
                 FirewallAction.Block, path_to_use_file,
                 FirewallProtocol.Any);
 
             _rule.Direction = FirewallDirection.Inbound; //Inbound
             FirewallManager.Instance.Rules.Add(_rule);
 
-            fix = true;
+            return true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to create the rule: {ex.Message}");
-            fix = false;
-            return;
+            return false;
         }
     }
 }
